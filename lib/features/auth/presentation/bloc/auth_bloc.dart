@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get_it/get_it.dart';
 import 'package:meta/meta.dart';
 import 'package:tudu/features/auth/data/models/auth_model.dart';
 
@@ -21,7 +22,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         userData: AuthUserData(email: event.email, password: event.password),
       );
       await registerMethod.register();
-      emit(AuthInitial());
+      emit(Authenticated(user: GetIt.I.get<FirebaseAuth>().currentUser!));
     } catch (e) {
       emit(AuthFailure(error: e.toString()));
     }
@@ -35,7 +36,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         userData: AuthUserData(email: event.email, password: event.password),
       );
       await loginMethod.login();
-      emit(AuthInitial());
+      emit(Authenticated(user: GetIt.I.get<FirebaseAuth>().currentUser!));
     } catch (e) {
       emit(AuthFailure(error: e.toString()));
     }
