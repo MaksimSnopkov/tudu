@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tudu/config/styles.dart';
+import 'package:tudu/features/auth/data/models/auth_model.dart';
 import 'package:tudu/features/home/presentation/pages/home_page/home_page.dart';
 
 class AuthInterface extends StatefulWidget {
@@ -42,7 +43,7 @@ class _AuthInterfaceState extends State<AuthInterface> {
           padding: EdgeInsets.symmetric(horizontal: 25.w, vertical: 120.h),
           child: Container(
             width: 340.w,
-            height: 548.h,
+            height: 578.h,
 
             decoration: BoxDecoration(color: const Color(0xFFD1FAE5), borderRadius: BorderRadius.circular(15.r)),
 
@@ -50,21 +51,14 @@ class _AuthInterfaceState extends State<AuthInterface> {
               children: [
                 Padding(
                   padding: EdgeInsets.only(top: 30.h, bottom: 46.h, right: 48.w, left: 47.w),
-                  child: Text("Зарегистрироваться", style: AppStyles.authText),
+                  child: Text("Зарегистрироваться", style: AppStyles.authText.copyWith(color: Color(0xFF059669))),
                 ),
                 Form(
                   key: formKey,
 
                   onChanged: () {
-                    if (formKey.currentState?.validate() == true) {
-                      setState(() {
-                        buttonReady = true;
-                      });
-                    } else if (formKey.currentState?.validate() == false) {
-                      setState(() {
-                        buttonReady = false;
-                      });
-                    }
+                    final isValid = formKey.currentState?.validate() ?? false;
+                    setState(() => buttonReady = isValid);
                   },
 
                   child: Column(
@@ -84,6 +78,7 @@ class _AuthInterfaceState extends State<AuthInterface> {
                           setState(() {
                             name = widget.nameController.text;
                           });
+                          return null;
                         },
                         TextInputType.name,
                       ),
@@ -105,6 +100,7 @@ class _AuthInterfaceState extends State<AuthInterface> {
                           setState(() {
                             email = widget.emailController.text;
                           });
+                          return;
                         },
                         TextInputType.emailAddress,
                       ),
@@ -126,6 +122,7 @@ class _AuthInterfaceState extends State<AuthInterface> {
                           setState(() {
                             password = widget.passwordController.text;
                           });
+                          return;
                         },
                         TextInputType.visiblePassword,
                       ),
@@ -142,7 +139,7 @@ class _AuthInterfaceState extends State<AuthInterface> {
                           }
                           return null;
                         },
-                        (value) => null,
+                        (value) {},
                         TextInputType.visiblePassword,
                       ),
                     ],
@@ -155,8 +152,14 @@ class _AuthInterfaceState extends State<AuthInterface> {
                   style: AppStyles.authText.copyWith(color: const Color(0xFFFF0000), fontSize: 15.sp),
                 ),
                 SizedBox(height: 15.h),
-                ContinueButton(() {
-                  print('button enabled');
+                continueButton(() async {
+                  await RegisterWithEmail(
+                    userData: AuthUserData(
+                      username: widget.nameController.text,
+                      email: widget.emailController.text,
+                      password: widget.passwordController.text,
+                    ),
+                  ).register();
                 }),
               ],
             ),
@@ -166,16 +169,17 @@ class _AuthInterfaceState extends State<AuthInterface> {
     );
   }
 
+  //Tudu:"shadowColor: Colors.transparent, // убрать затемнение от тениshadowColor: Colors.transparent, // убрать затемнение от тени elevation: 0,"
   Widget authTextField(
     TextEditingController controller,
     String hintText,
     String? Function(String?) validator,
-    String? Function(String?) onChanged,
+    void Function(String)? onChanged,
     TextInputType keyboardType,
   ) {
     return SizedBox(
       width: 315.w,
-      height: 60.h,
+      height: 70.h,
       child: TextFormField(
         controller: controller,
         decoration: InputDecoration(
@@ -204,12 +208,14 @@ class _AuthInterfaceState extends State<AuthInterface> {
           errorText: null,
 
           filled: true,
-          fillColor: const Color(0xFF1EA379),
+          fillColor: const Color(0xFF1EA379).withValues(alpha: 0.5),
         ),
 
         keyboardType: keyboardType,
 
-        cursorColor: Colors.black,
+        style: AppStyles.authText,
+
+        cursorColor: Colors.white,
         textAlign: TextAlign.left,
         textDirection: TextDirection.ltr,
 
@@ -224,21 +230,24 @@ class _AuthInterfaceState extends State<AuthInterface> {
     );
   }
 
-  VoidCallback? ContinueButtonFunc() {
-    if (buttonReady == false)
-      return null;
-    else
-      return () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()));
-      };
-  }
-
-  Widget ContinueButton(VoidCallback onPressed) {
+  Widget continueButton(VoidCallback onPressed) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        backgroundColor: buttonReady ? const Color(0x801EA379) : const Color.fromARGB(255, 1, 147, 101),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        minimumSize: Size(315.w, 50.h),
+        backgroundColor: buttonReady
+            ? const Color(0x801EA379).withValues(alpha: 0.5)
+            : const Color(0xFF1EA379).withValues(alpha: 0.6),
+        elevation: 0,
+        shadowColor: Colors.transparent,
       ),
-      onPressed: ContinueButtonFunc(),
+      onPressed: buttonReady
+          ? () async {
+              if (formKey.currentState?.validate() ?? false) {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()));
+              }
+            }
+          : null,
       child: Text("Продолжить", style: AppStyles.authText),
     );
   }

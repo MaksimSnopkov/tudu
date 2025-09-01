@@ -30,7 +30,7 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Tudu',
-      theme: ThemeData(useMaterial3: true),
+      theme: ThemeData(useMaterial3: false),
       home: RegisterPage(),
     );
   }

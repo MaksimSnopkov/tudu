@@ -22,7 +22,11 @@ class RegisterWithEmail implements RegisterMethod {
 
   @override
   Future<void> register() async {
-    await auth.createUserWithEmailAndPassword(email: userData.email, password: userData.password);
+    try {
+      await auth.createUserWithEmailAndPassword(email: userData.email, password: userData.password);
+    } on FirebaseAuthException catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -66,8 +70,9 @@ class Logout implements LogoutMethod {
 }
 
 class AuthUserData {
+  final String username;
   final String email;
   final String password;
 
-  AuthUserData({required this.email, required this.password});
+  AuthUserData({required this.username, required this.email, required this.password});
 }

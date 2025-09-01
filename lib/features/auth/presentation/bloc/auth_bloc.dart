@@ -19,7 +19,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       // Call the register method with the provided email and password
       final registerMethod = RegisterWithEmail(
-        userData: AuthUserData(email: event.email, password: event.password),
+        userData: AuthUserData(username: event.username, email: event.email, password: event.password),
       );
       await registerMethod.register();
       emit(Authenticated(user: GetIt.I.get<FirebaseAuth>().currentUser!));
@@ -33,7 +33,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       // Call the login method with the provided email and password
       final loginMethod = LoginWithEmail(
-        userData: AuthUserData(email: event.email, password: event.password),
+        userData: AuthUserData(username: event.username, email: event.email, password: event.password),
       );
       await loginMethod.login();
       emit(Authenticated(user: GetIt.I.get<FirebaseAuth>().currentUser!));

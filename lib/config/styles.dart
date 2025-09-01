@@ -6,7 +6,7 @@ class AppStyles {
   const AppStyles._();
 
   static TextStyle authText = GoogleFonts.comfortaa(
-    color: Color(0xFF059669),
+    color: Colors.white,
     fontWeight: FontWeight.w400,
     fontSize: 19.sp,
     fontStyle: FontStyle.normal,
