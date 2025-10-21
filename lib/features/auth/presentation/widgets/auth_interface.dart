@@ -169,7 +169,6 @@ class _AuthInterfaceState extends State<AuthInterface> {
     );
   }
 
-  //Tudu:"shadowColor: Colors.transparent, // убрать затемнение от тениshadowColor: Colors.transparent, // убрать затемнение от тени elevation: 0,"
   Widget authTextField(
     TextEditingController controller,
     String hintText,
@@ -235,9 +234,7 @@ class _AuthInterfaceState extends State<AuthInterface> {
       style: ElevatedButton.styleFrom(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         minimumSize: Size(315.w, 50.h),
-        backgroundColor: buttonReady
-            ? const Color(0x801EA379).withValues(alpha: 0.5)
-            : const Color(0xFF1EA379).withValues(alpha: 0.6),
+        backgroundColor: buttonReady ? const Color(0x801EA379) : const Color(0xFF1EA379).withValues(alpha: 0.6),
         elevation: 0,
         shadowColor: Colors.transparent,
       ),

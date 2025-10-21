@@ -11,4 +11,11 @@ class AppStyles {
     fontSize: 19.sp,
     fontStyle: FontStyle.normal,
   );
+
+  static TextStyle taskText = GoogleFonts.comfortaa(
+    color: Colors.black,
+    fontWeight: FontWeight.w400,
+    fontSize: 15.sp,
+    fontStyle: FontStyle.normal,
+  );
 }

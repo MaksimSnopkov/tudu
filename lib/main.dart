@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
+import 'package:tudu/features/home/presentation/pages/home_page/home_page.dart';
 
 import 'firebase_options.dart';
 import 'features/auth/presentation/pages/register_page/register_page.dart';
@@ -22,6 +23,16 @@ void main() async {
   );
 }
 
+Widget isAuth() {
+  FirebaseAuth auth = FirebaseAuth.instance;
+  User? user = auth.currentUser;
+  if (user != null) {
+    return RegisterPage();
+  } else {
+    return HomePage();
+  }
+}
+
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
 
@@ -31,7 +42,7 @@ class MainApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Tudu',
       theme: ThemeData(useMaterial3: false),
-      home: RegisterPage(),
+      home: isAuth(),
     );
   }
 }
