@@ -10,7 +10,7 @@ import 'features/auth/presentation/pages/register_page/register_page.dart';
 
 final getIt = GetIt.instance;
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -26,10 +26,13 @@ void main() async {
 Widget isAuth() {
   FirebaseAuth auth = FirebaseAuth.instance;
   User? user = auth.currentUser;
+
   if (user != null) {
-    return RegisterPage();
+    // Пользователь уже вошёл → идём на домашнюю страницу
+    return const HomePage();
   } else {
-    return HomePage();
+    // Пользователь не авторизован → на регистрацию/логин
+    return RegisterPage();
   }
 }
 

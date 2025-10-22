@@ -78,7 +78,7 @@ class _AuthInterfaceState extends State<AuthInterface> {
                           setState(() {
                             name = widget.nameController.text;
                           });
-                          return null;
+                          return;
                         },
                         TextInputType.name,
                       ),

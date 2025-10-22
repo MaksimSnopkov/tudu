@@ -3,17 +3,30 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tudu/config/styles.dart';
 
 class TaskCard extends StatefulWidget {
-  TaskCard({required this.taskText, required this.isDone, super.key});
+  const TaskCard({required this.taskText, super.key});
 
   @override
   State<TaskCard> createState() => _TaskCardState();
 
-  String taskText;
-  bool isDone = false;
+  final String taskText;
 }
 
 class _TaskCardState extends State<TaskCard> {
   TextEditingController controller = TextEditingController();
+
+  bool isDone = false;
+
+  @override
+  void initState() {
+    super.initState();
+    controller.text = widget.taskText;
+  }
+
+  void toggleIsDone() {
+    setState(() {
+      isDone = !isDone;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,9 +37,7 @@ class _TaskCardState extends State<TaskCard> {
         children: [
           GestureDetector(
             onTap: () {
-              setState(() {
-                widget.isDone = !widget.isDone;
-              });
+              toggleIsDone();
             },
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
@@ -35,9 +46,9 @@ class _TaskCardState extends State<TaskCard> {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(color: Color(0xFF4F46E5), width: 2.w),
-                color: widget.isDone ? Color(0xFF4F46E5) : Colors.transparent,
+                color: isDone ? Color(0xFF4F46E5) : Colors.transparent,
               ),
-              child: widget.isDone ? const Icon(Icons.check, color: Colors.white, size: 16) : null,
+              child: isDone ? Icon(Icons.check, color: Colors.white, size: 16.sp) : null,
             ),
           ),
           SizedBox(width: 8.w),
@@ -70,5 +81,11 @@ class _TaskCardState extends State<TaskCard> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 }
