@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 abstract class RegisterMethod extends Equatable {
   Future<void> register();
@@ -16,6 +17,7 @@ abstract class LogoutMethod extends Equatable {
 
 class RegisterWithEmail implements RegisterMethod {
   final FirebaseAuth auth = GetIt.I.get<FirebaseAuth>();
+  final Talker talker = GetIt.I.get<Talker>();
   final AuthUserData userData;
 
   RegisterWithEmail({required this.userData});
@@ -24,8 +26,9 @@ class RegisterWithEmail implements RegisterMethod {
   Future<void> register() async {
     try {
       await auth.createUserWithEmailAndPassword(email: userData.email, password: userData.password);
+      talker.info('Registration successful for user: ${userData.email}');
     } on FirebaseAuthException catch (e) {
-      print(e);
+      talker.error('Registration error: ${e.message}');
     }
   }
 
@@ -38,13 +41,21 @@ class RegisterWithEmail implements RegisterMethod {
 
 class LoginWithEmail implements LoginMethod {
   final FirebaseAuth auth = GetIt.I.get<FirebaseAuth>();
+  final Talker talker = GetIt.I.get<Talker>();
   final AuthUserData userData;
 
   LoginWithEmail({required this.userData});
 
   @override
   Future<void> login() async {
-    await auth.signInWithEmailAndPassword(email: userData.email, password: userData.password);
+    try {
+      await auth.signInWithEmailAndPassword(email: userData.email, password: userData.password);
+      talker.info('Login successful for user: ${userData.email}');
+    } on FirebaseAuthException catch (e) {
+      throw Exception('Login error: ${e.message}');
+    } catch (e, st) {
+      talker.handle(e, st);
+    }
   }
 
   @override
@@ -56,10 +67,16 @@ class LoginWithEmail implements LoginMethod {
 
 class Logout implements LogoutMethod {
   final FirebaseAuth auth = GetIt.I.get<FirebaseAuth>();
+  final Talker talker = GetIt.I.get<Talker>();
 
   @override
   Future<void> logout() async {
-    await auth.signOut();
+    try {
+      await auth.signOut();
+      talker.info('User logged out successfully');
+    } catch (e, st) {
+      talker.handle(e, st);
+    }
   }
 
   @override

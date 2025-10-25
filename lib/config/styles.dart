@@ -18,4 +18,18 @@ class AppStyles {
     fontSize: 15.sp,
     fontStyle: FontStyle.normal,
   );
+
+  static TextStyle bottomNavSelected = GoogleFonts.comfortaa(
+    color: Color(0xFF4F46E5),
+    fontWeight: FontWeight.w400,
+    fontSize: 12.sp,
+    fontStyle: FontStyle.normal,
+  );
+
+  static TextStyle bottomNavUnselected = GoogleFonts.comfortaa(
+    color: Color(0xFF4B5563),
+    fontWeight: FontWeight.w400,
+    fontSize: 12.sp,
+    fontStyle: FontStyle.normal,
+  );
 }

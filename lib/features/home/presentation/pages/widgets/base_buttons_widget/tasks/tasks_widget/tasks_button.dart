@@ -21,7 +21,7 @@ class TasksButton extends StatelessWidget {
       ),
       child: Text(
         'Задачи',
-        style: AppStyles.authText.copyWith(fontSize: 15.sp, height: 100.sp, color: Color(0xFF4F46E5)),
+        style: AppStyles.authText.copyWith(fontSize: 15.sp, height: 1.7.sp, color: Color(0xFF4F46E5)),
       ),
     );
   }

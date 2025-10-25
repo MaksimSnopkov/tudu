@@ -10,20 +10,50 @@ class TasksContainer extends StatefulWidget {
 }
 
 class _TasksContainerState extends State<TasksContainer> {
+  List<String> tasks = ["Помыть посуду", "Сделать уборку"];
+
+  VoidCallback addTask() {
+    return () => setState(() {
+      tasks.add('Напишите задачу (нажмите)');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       width: 348.w,
-      height: 451.h,
+
       decoration: BoxDecoration(color: Color(0xFFE0E7FF), borderRadius: BorderRadius.circular(15)),
-      child: Padding(
-        padding: EdgeInsets.only(bottom: 240.h, top: 31.h, left: 18.w, right: 18.w),
-        child: ListView.builder(
-          itemCount: 1,
-          itemBuilder: (context, index) {
-            return TaskCard(taskText: "Помыть посуду");
-          },
-        ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            height: 390.h,
+            child: ListView.builder(
+              itemCount: tasks.length,
+              itemBuilder: (context, index) {
+                return TaskCard(
+                  taskText: tasks[index],
+                  onAdd: addTask,
+                  onDelete: () {
+                    setState(() {
+                      tasks.removeAt(index);
+                    });
+                  },
+                );
+              },
+            ),
+          ),
+          SizedBox(
+            width: 60.w,
+            height: 60.h,
+            child: ElevatedButton(
+              onPressed: addTask,
+              style: ElevatedButton.styleFrom(backgroundColor: Color(0xFF4F46E5), shape: const CircleBorder()),
+              child: Icon(Icons.add, size: 25.sp),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -3,7 +3,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 import 'package:tudu/features/home/presentation/pages/home_page/home_page.dart';
+import 'package:tudu/utils/routes/routes.dart';
+import 'package:tudu/utils/routes/routes_name.dart';
 
 import 'firebase_options.dart';
 import 'features/auth/presentation/pages/register_page/register_page.dart';
@@ -13,26 +16,36 @@ final getIt = GetIt.instance;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  final talker = TalkerFlutter.init();
+  getIt.registerSingleton<Talker>(talker);
+  talker.verbose('Talker initialized');
+
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   FirebaseAuth auth = FirebaseAuth.instance;
   getIt.registerSingleton<FirebaseAuth>(auth);
 
   runApp(
-    ScreenUtilInit(designSize: const Size(390, 844), minTextAdapt: true, splitScreenMode: true, child: const MainApp()),
+    ScreenUtilInit(
+      designSize: const Size(390, 844),
+      minTextAdapt: false,
+      splitScreenMode: false,
+      child: const MainApp(),
+    ),
   );
 }
 
-Widget isAuth() {
+String isAuth() {
   FirebaseAuth auth = FirebaseAuth.instance;
   User? user = auth.currentUser;
 
+  Talker talker = GetIt.I.get<Talker>();
+  talker.info('Current user: ${user ?? "No user logged in"}');
+
   if (user != null) {
-    // Пользователь уже вошёл → идём на домашнюю страницу
-    return const HomePage();
+    return route(HomePage);
   } else {
-    // Пользователь не авторизован → на регистрацию/логин
-    return RegisterPage();
+    return route(RegisterPage);
   }
 }
 
@@ -43,9 +56,13 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+
+      routes: generateRoutes(),
+      initialRoute: isAuth(),
+
       title: 'Tudu',
       theme: ThemeData(useMaterial3: false),
-      home: isAuth(),
+      home: RegisterPage(),
     );
   }
 }
