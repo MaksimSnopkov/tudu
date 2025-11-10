@@ -13,7 +13,7 @@ class RegisterPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      body: new AuthInterface(
+      body: AuthInterface(
         nameController: nameController,
         emailController: emailController,
         passwordController: passwordController,

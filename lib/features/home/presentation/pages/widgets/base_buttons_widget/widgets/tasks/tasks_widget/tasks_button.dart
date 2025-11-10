@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tudu/config/styles.dart';
-import 'package:tudu/features/home/presentation/pages/widgets/base_buttons_widget/usecases/containers_control.dart';
 
 class TasksButton extends StatelessWidget {
-  const TasksButton({super.key});
+  const TasksButton({super.key, required this.onTap, this.isActive = false});
+
+  final VoidCallback onTap;
+  final bool isActive;
 
   @override
   Widget build(BuildContext context) {
-    final control = ContainersControl();
     return ElevatedButton(
-      onPressed: () {
-        control.changeContainer(ContainerType.task);
-      },
+      onPressed: onTap,
       style: ElevatedButton.styleFrom(
         fixedSize: Size(108.w, 80.h),
         elevation: 12,

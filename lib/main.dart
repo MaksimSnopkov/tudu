@@ -1,20 +1,24 @@
-import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:talker_flutter/talker_flutter.dart';
+
 import 'package:tudu/features/home/presentation/pages/home_page/home_page.dart';
 import 'package:tudu/utils/routes/routes.dart';
 import 'package:tudu/utils/routes/routes_name.dart';
 
-import 'firebase_options.dart';
 import 'features/auth/presentation/pages/register_page/register_page.dart';
+import 'firebase_options.dart';
 
 final getIt = GetIt.instance;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await initializeDateFormatting('ru_RU', null);
 
   final talker = TalkerFlutter.init();
   getIt.registerSingleton<Talker>(talker);

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:tudu/features/home/presentation/pages/widgets/base_buttons_widget/tasks/tasks_widget/task_card.dart';
+import 'package:tudu/features/home/presentation/pages/widgets/base_buttons_widget/widgets/tasks/tasks_widget/task_card.dart';
 
 class TasksContainer extends StatefulWidget {
   const TasksContainer({super.key});
@@ -12,8 +12,8 @@ class TasksContainer extends StatefulWidget {
 class _TasksContainerState extends State<TasksContainer> {
   List<String> tasks = ["Помыть посуду", "Сделать уборку"];
 
-  VoidCallback addTask() {
-    return () => setState(() {
+  void addTask() {
+    setState(() {
       tasks.add('Напишите задачу (нажмите)');
     });
   }
