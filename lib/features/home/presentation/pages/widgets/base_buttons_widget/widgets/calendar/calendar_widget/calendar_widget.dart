@@ -14,12 +14,11 @@ class CalendarWidget extends StatefulWidget {
 List<DateTime> generateCalendarDays(DateTime focusedDay) {
   final firstDayOfMonth = DateTime(focusedDay.year, focusedDay.month, 1);
 
-  int weekdayOfFirst = firstDayOfMonth.weekday;
-  final startDate = firstDayOfMonth.subtract(Duration(days: weekdayOfFirst - 1));
+  // ✅ 2 дня до начала месяца
+  final startDate = firstDayOfMonth.subtract(const Duration(days: 2));
 
-  return List.generate(42, (index) {
-    return startDate.add(Duration(days: index));
-  });
+  // ✅ Всего нужно 35 дней (2 прошлых + дни текущего месяца + 3 следующих)
+  return List.generate(35, (index) => startDate.add(Duration(days: index)));
 }
 
 bool _isToday(DateTime date) {
@@ -32,8 +31,6 @@ bool _isCurrentMonth(DateTime date, DateTime focusedDay) {
 }
 
 class _CalendarWidgetState extends State<CalendarWidget> {
-  DateTime? _selectedDay;
-
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<DateTime>(
@@ -58,22 +55,13 @@ class _CalendarWidgetState extends State<CalendarWidget> {
             itemBuilder: (context, index) {
               final date = days[index];
               final isToday = _isToday(date);
-              final isSelected =
-                  _selectedDay != null &&
-                  date.year == _selectedDay!.year &&
-                  date.month == _selectedDay!.month &&
-                  date.day == _selectedDay!.day;
               final isCurrentMonth = _isCurrentMonth(date, focusedDay);
 
               Color backgroundColor;
               Color textColor;
               FontWeight fontWeight = FontWeight.w500;
 
-              if (isSelected) {
-                backgroundColor = const Color(0xFF059669);
-                textColor = Colors.white;
-                fontWeight = FontWeight.w600;
-              } else if (isToday) {
+              if (isToday) {
                 backgroundColor = const Color(0xFF10B981);
                 textColor = Colors.white;
               } else if (isCurrentMonth) {
@@ -86,10 +74,15 @@ class _CalendarWidgetState extends State<CalendarWidget> {
 
               return GestureDetector(
                 onTap: () {
-                  setState(() {
-                    _selectedDay = date;
-                    widget.focusedDayNotifier.value = date;
-                  });
+                  final newFocusedDay = date;
+
+                  if (date.month < focusedDay.month || date.year < focusedDay.year) {
+                    widget.focusedDayNotifier.value = DateTime(focusedDay.year, focusedDay.month - 1, 1);
+                  } else if (date.month > focusedDay.month || date.year > focusedDay.year) {
+                    widget.focusedDayNotifier.value = DateTime(focusedDay.year, focusedDay.month + 1, 1);
+                  } else {
+                    widget.focusedDayNotifier.value = newFocusedDay;
+                  }
                 },
                 child: Container(
                   width: 40.w,

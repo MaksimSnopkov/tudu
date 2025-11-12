@@ -32,10 +32,23 @@ class _CalendarContainerState extends State<CalendarContainer> {
     "Декабрь",
   ];
 
+  // Список лет
+  List<String> years = const [];
+
   @override
   void initState() {
     super.initState();
     selected = months[focusedDayNotifier.value.month - 1];
+
+    focusedDayNotifier.addListener(() {
+      final newMonth = months[focusedDayNotifier.value.month - 1];
+
+      if (selected != newMonth) {
+        setState(() => selected = newMonth);
+      }
+
+      years = List.generate(50, (index) => (DateTime.now().year - 25 + index).toString());
+    });
   }
 
   void onPreviousMonth() {
@@ -50,6 +63,14 @@ class _CalendarContainerState extends State<CalendarContainer> {
     focusedDayNotifier.value = newDate;
     selected = months[newDate.month - 1];
     setState(() {});
+  }
+
+  void onNextYear() {
+    focusedDayNotifier.value = DateTime(focusedDayNotifier.value.year + 1, focusedDayNotifier.value.month);
+  }
+
+  void onPrevYear() {
+    focusedDayNotifier.value = DateTime(focusedDayNotifier.value.year - 1, focusedDayNotifier.value.month);
   }
 
   Widget calendarSwitcherButton(VoidCallback onPrev, VoidCallback onNext, List<String> bottomList) {
@@ -95,21 +116,21 @@ class _CalendarContainerState extends State<CalendarContainer> {
                         controller: scrollController,
                         padding: EdgeInsets.symmetric(vertical: 8.h),
                         shrinkWrap: true,
-                        itemCount: months.length,
+                        itemCount: bottomList.length,
                         itemBuilder: (context, index) {
-                          final month = months[index];
-                          final isSelected = month == selected;
+                          final bList = bottomList[index];
+                          final isSelected = bList == selected;
 
                           return InkWell(
-                            onTap: () => Navigator.of(dialogContext).pop(month),
+                            onTap: () => Navigator.of(dialogContext).pop(bList),
                             child: Container(
                               height: 40.h,
                               padding: EdgeInsets.symmetric(horizontal: 16.w),
                               decoration: BoxDecoration(color: isSelected ? const Color(0xFFD1FAE5) : null),
                               alignment: Alignment.centerLeft,
                               child: Text(
-                                month,
-                                style: TextStyle(
+                                bList,
+                                style: AppStyles.taskText.copyWith(
                                   fontSize: 14.sp,
                                   color: Colors.black,
                                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
@@ -184,7 +205,12 @@ class _CalendarContainerState extends State<CalendarContainer> {
       decoration: BoxDecoration(color: const Color(0xFFD1FAE5), borderRadius: BorderRadius.circular(15)),
       child: Column(
         children: [
-          calendarSwitcherButton(onPreviousMonth, onNextMonth, months),
+          Row(
+            children: [
+              calendarSwitcherButton(onPreviousMonth, onNextMonth, months),
+              calendarSwitcherButton(onPrevYear, onNextYear, years),
+            ],
+          ),
           CalendarWidget(focusedDayNotifier: focusedDayNotifier),
         ],
       ),
