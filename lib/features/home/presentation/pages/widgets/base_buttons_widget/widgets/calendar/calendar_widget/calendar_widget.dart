@@ -13,11 +13,7 @@ class CalendarWidget extends StatefulWidget {
 
 List<DateTime> generateCalendarDays(DateTime focusedDay) {
   final firstDayOfMonth = DateTime(focusedDay.year, focusedDay.month, 1);
-
-  // ✅ 2 дня до начала месяца
   final startDate = firstDayOfMonth.subtract(const Duration(days: 2));
-
-  // ✅ Всего нужно 35 дней (2 прошлых + дни текущего месяца + 3 следующих)
   return List.generate(35, (index) => startDate.add(Duration(days: index)));
 }
 
@@ -41,7 +37,6 @@ class _CalendarWidgetState extends State<CalendarWidget> {
         return Padding(
           padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
           child: GridView.builder(
-            // ✅ КРИТИЧНО: добавляем shrinkWrap и отключаем скролл
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
 

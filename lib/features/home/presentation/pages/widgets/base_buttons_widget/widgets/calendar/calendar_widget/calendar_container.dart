@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:tudu/config/styles.dart';
 import 'package:tudu/features/home/presentation/pages/widgets/base_buttons_widget/widgets/calendar/calendar_widget/calendar_widget.dart';
+import 'package:tudu/features/home/presentation/pages/widgets/base_buttons_widget/widgets/calendar/calendar_widget/widgets/calendar_switcher_button.dart';
 
 class CalendarContainer extends StatefulWidget {
   const CalendarContainer({super.key});
@@ -33,7 +33,7 @@ class _CalendarContainerState extends State<CalendarContainer> {
   ];
 
   // Список лет
-  List<String> years = const [];
+  List<String> years = [DateTime.now().year.toString()];
 
   @override
   void initState() {
@@ -46,8 +46,6 @@ class _CalendarContainerState extends State<CalendarContainer> {
       if (selected != newMonth) {
         setState(() => selected = newMonth);
       }
-
-      years = List.generate(50, (index) => (DateTime.now().year - 25 + index).toString());
     });
   }
 
@@ -73,131 +71,6 @@ class _CalendarContainerState extends State<CalendarContainer> {
     focusedDayNotifier.value = DateTime(focusedDayNotifier.value.year - 1, focusedDayNotifier.value.month);
   }
 
-  Widget calendarSwitcherButton(VoidCallback onPrev, VoidCallback onNext, List<String> bottomList) {
-    void showMonthPickerWithScrollbar(BuildContext context) async {
-      final RenderBox button = context.findRenderObject() as RenderBox;
-      final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
-
-      final offset = button.localToGlobal(Offset.zero, ancestor: overlay);
-
-      final scrollController = ScrollController();
-
-      final String? selectedMonth = await showDialog<String>(
-        context: context,
-        barrierColor: Colors.transparent,
-        builder: (dialogContext) {
-          return Stack(
-            children: [
-              GestureDetector(
-                onTap: () => Navigator.of(dialogContext).pop(),
-                behavior: HitTestBehavior.translucent,
-                child: Container(color: Colors.transparent),
-              ),
-
-              Positioned(
-                left: offset.dx - 40.w,
-                top: offset.dy,
-                child: Material(
-                  elevation: 8,
-                  borderRadius: BorderRadius.circular(16),
-                  child: Container(
-                    width: 150.w,
-                    constraints: BoxConstraints(maxHeight: 250.h),
-                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
-                    child: RawScrollbar(
-                      controller: scrollController,
-                      thumbColor: Color(0xFF059669),
-                      radius: const Radius.circular(4),
-                      thickness: 2,
-                      thumbVisibility: true,
-                      trackVisibility: false,
-                      padding: EdgeInsets.only(right: 2.w, top: 4.h, bottom: 4.h),
-                      child: ListView.builder(
-                        controller: scrollController,
-                        padding: EdgeInsets.symmetric(vertical: 8.h),
-                        shrinkWrap: true,
-                        itemCount: bottomList.length,
-                        itemBuilder: (context, index) {
-                          final bList = bottomList[index];
-                          final isSelected = bList == selected;
-
-                          return InkWell(
-                            onTap: () => Navigator.of(dialogContext).pop(bList),
-                            child: Container(
-                              height: 40.h,
-                              padding: EdgeInsets.symmetric(horizontal: 16.w),
-                              decoration: BoxDecoration(color: isSelected ? const Color(0xFFD1FAE5) : null),
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                bList,
-                                style: AppStyles.taskText.copyWith(
-                                  fontSize: 14.sp,
-                                  color: Colors.black,
-                                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          );
-        },
-      );
-
-      scrollController.dispose();
-
-      if (selectedMonth != null) {
-        setState(() {
-          selected = selectedMonth;
-          focusedDayNotifier.value = DateTime(focusedDayNotifier.value.year, months.indexOf(selectedMonth) + 1, 1);
-        });
-      }
-    }
-
-    return ValueListenableBuilder<DateTime>(
-      valueListenable: focusedDayNotifier,
-      builder: (context, focusedDay, _) {
-        return Row(
-          children: [
-            IconButton(
-              onPressed: onPrev,
-              icon: const Icon(Icons.keyboard_arrow_left, color: Color(0xFF000000)),
-            ),
-
-            Builder(
-              builder: (BuildContext btnContext) {
-                return TextButton(
-                  onPressed: () => showMonthPickerWithScrollbar(btnContext),
-                  child: SizedBox(
-                    width: 74.w,
-                    child: Text(
-                      selected,
-                      textAlign: TextAlign.center,
-                      overflow: TextOverflow.ellipsis,
-                      softWrap: false,
-                      maxLines: 1,
-                      style: AppStyles.authText.copyWith(color: Colors.black, fontSize: 15.sp),
-                    ),
-                  ),
-                );
-              },
-            ),
-
-            IconButton(
-              onPressed: onNext,
-              icon: const Icon(Icons.keyboard_arrow_right, color: Color(0xFF000000)),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -206,9 +79,23 @@ class _CalendarContainerState extends State<CalendarContainer> {
       child: Column(
         children: [
           Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              calendarSwitcherButton(onPreviousMonth, onNextMonth, months),
-              calendarSwitcherButton(onPrevYear, onNextYear, years),
+              CalendarSwitcherButton(
+                focusedDayNotifier: focusedDayNotifier,
+                isYear: false,
+                list: months,
+                onPrev: onPreviousMonth,
+                onNext: onNextMonth,
+              ),
+              CalendarSwitcherButton(
+                focusedDayNotifier: focusedDayNotifier,
+                isYear: true,
+                list: years,
+                onPrev: onPrevYear,
+                onNext: onNextYear,
+              ),
             ],
           ),
           CalendarWidget(focusedDayNotifier: focusedDayNotifier),
