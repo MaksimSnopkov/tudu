@@ -10,10 +10,10 @@ class CalendarContainer extends StatefulWidget {
   State<CalendarContainer> createState() => _CalendarContainerState();
 }
 
+//TODO: перекодить
 class _CalendarContainerState extends State<CalendarContainer> {
   final ValueNotifier<DateTime> focusedDayNotifier = ValueNotifier(DateTime.now());
 
-  /// ✅ Переменная выбранного месяца
   late String selected;
 
   /// Список месяцев
@@ -52,14 +52,12 @@ class _CalendarContainerState extends State<CalendarContainer> {
   void onPreviousMonth() {
     final newDate = DateTime(focusedDayNotifier.value.year, focusedDayNotifier.value.month - 1, 1);
     focusedDayNotifier.value = newDate;
-    selected = months[newDate.month - 1];
     setState(() {});
   }
 
   void onNextMonth() {
     final newDate = DateTime(focusedDayNotifier.value.year, focusedDayNotifier.value.month + 1, 1);
     focusedDayNotifier.value = newDate;
-    selected = months[newDate.month - 1];
     setState(() {});
   }
 

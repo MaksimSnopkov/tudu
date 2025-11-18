@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tudu/config/styles.dart';
+import 'package:tudu/features/family/presentation/pages/family_page/family_page.dart';
+import 'package:tudu/features/home/presentation/pages/home_page/home_page.dart';
+import 'package:tudu/utils/routes/routes.dart';
 
 class AppBottomNavigationBar extends StatefulWidget {
   const AppBottomNavigationBar({super.key});
@@ -21,9 +24,9 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
           _currentIndex = value;
 
           if (value == 0) {
-            Navigator.pushNamed(context, '/home');
+            Navigator.pushNamed(context, route(HomePage));
           } else if (value == 1) {
-            Navigator.pushNamed(context, '/family');
+            Navigator.pushNamed(context, route(FamilyPage));
           } else if (value == 2) {
             Navigator.pushNamed(context, '/settings');
           }

@@ -16,10 +16,16 @@ class _FamilyChatButtonState extends State<FamilyChatButton> {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () {},
-      style: ElevatedButton.styleFrom(elevation: 15.r, backgroundColor: Color(0xFFEF8249)),
+      style: ElevatedButton.styleFrom(
+        minimumSize: Size(354.w, 50.h),
+        maximumSize: Size(354.w, 50.h),
+        backgroundColor: Color(0xFFEF8249),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      ),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset("assets/icons/family.png", width: 30.w, height: 30.h),
+          Image.asset("assets/icons/chat.png", width: 30.w, height: 30.h),
           SizedBox(width: 40.w),
           Text(
             "Семейный чат",
@@ -30,9 +36,11 @@ class _FamilyChatButtonState extends State<FamilyChatButton> {
             decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
             width: 30.w,
             height: 30.h,
-            child: Text(
-              widget.chatCountMessages.toString(),
-              style: AppStyles.taskText.copyWith(fontSize: 17.sp, color: Color(0xFFEF8249)),
+            child: Center(
+              child: Text(
+                widget.chatCountMessages.toString(),
+                style: AppStyles.taskText.copyWith(fontSize: 17.sp, color: Color(0xFFEF8249)),
+              ),
             ),
           ),
         ],

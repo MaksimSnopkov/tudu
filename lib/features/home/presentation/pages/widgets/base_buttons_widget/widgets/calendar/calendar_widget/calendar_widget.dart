@@ -11,6 +11,7 @@ class CalendarWidget extends StatefulWidget {
   State<CalendarWidget> createState() => _CalendarWidgetState();
 }
 
+//TODO: перекодить
 List<DateTime> generateCalendarDays(DateTime focusedDay) {
   final firstDayOfMonth = DateTime(focusedDay.year, focusedDay.month, 1);
   final startDate = firstDayOfMonth.subtract(const Duration(days: 2));
