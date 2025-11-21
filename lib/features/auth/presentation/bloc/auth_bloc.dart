@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:meta/meta.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 import 'package:tudu/features/auth/data/models/auth_model.dart';
 
 part 'auth_event.dart';
@@ -33,6 +34,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       // Call the login method with the provided email and password
       final loginMethod = LoginWithEmail(
+        auth: GetIt.I.get<FirebaseAuth>(),
+        talker: GetIt.I.get<Talker>(),
         userData: AuthUserData(username: event.username, email: event.email, password: event.password),
       );
       await loginMethod.login();

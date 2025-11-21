@@ -87,7 +87,7 @@ class _AuthInterfaceState extends State<AuthInterface> {
                             (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Имя не может быть пустым';
-                              } else if (value.length < 6) {
+                              } else if (value.length <= 6) {
                                 return 'Имя должно быть не менее 6 символов';
                               }
                               return null;
@@ -290,6 +290,8 @@ class _AuthInterfaceState extends State<AuthInterface> {
               try {
                 if (widget.isLogin) {
                   await LoginWithEmail(
+                    auth: GetIt.I.get<FirebaseAuth>(),
+                    talker: GetIt.I.get<Talker>(),
                     userData: AuthUserData(
                       username: widget.nameController.text,
                       email: widget.emailController.text,

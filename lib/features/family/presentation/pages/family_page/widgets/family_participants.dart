@@ -11,7 +11,7 @@ class FamilyParticipants extends StatelessWidget {
       height: 366,
       child: ListView.separated(
         itemCount: 5,
-        separatorBuilder: (_, __) => SizedBox(height: 18.h),
+        separatorBuilder: (_, _) => SizedBox(height: 18.h),
         padding: EdgeInsets.symmetric(horizontal: 18.w),
         itemBuilder: (context, index) => ParticipantsPanel(userName: 'maksim', userRole: 'admin', inOnline: true),
       ),

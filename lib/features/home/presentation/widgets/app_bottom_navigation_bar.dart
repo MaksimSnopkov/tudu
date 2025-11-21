@@ -6,29 +6,29 @@ import 'package:tudu/features/home/presentation/pages/home_page/home_page.dart';
 import 'package:tudu/utils/routes/routes.dart';
 
 class AppBottomNavigationBar extends StatefulWidget {
-  const AppBottomNavigationBar({super.key});
+  AppBottomNavigationBar({super.key, required this.currentIndex});
+
+  final int currentIndex;
 
   @override
   State<AppBottomNavigationBar> createState() => _AppBottomNavigationBarState();
 }
 
 class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
-  int _currentIndex = 0;
-
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      currentIndex: _currentIndex,
+      currentIndex: widget.currentIndex,
       onTap: (value) {
         setState(() {
-          _currentIndex = value;
+          if (value == widget.currentIndex) return;
 
           if (value == 0) {
             Navigator.pushNamed(context, route(HomePage));
           } else if (value == 1) {
             Navigator.pushNamed(context, route(FamilyPage));
           } else if (value == 2) {
-            Navigator.pushNamed(context, '/settings');
+            //TODO: Navigator.pushNamed(context, route(SettingPage));
           }
         });
       },

@@ -40,11 +40,13 @@ class RegisterWithEmail implements RegisterMethod {
 }
 
 class LoginWithEmail implements LoginMethod {
-  final FirebaseAuth auth = GetIt.I.get<FirebaseAuth>();
-  final Talker talker = GetIt.I.get<Talker>();
+  final FirebaseAuth auth;
+  // = GetIt.I.get<FirebaseAuth>();
+  final Talker talker;
+  // = GetIt.I.get<Talker>();
   final AuthUserData userData;
 
-  LoginWithEmail({required this.userData});
+  const LoginWithEmail({required this.auth, required this.talker, required this.userData});
 
   @override
   Future<void> login() async {
@@ -86,10 +88,16 @@ class Logout implements LogoutMethod {
   bool get stringify => true;
 }
 
-class AuthUserData {
+class AuthUserData extends Equatable {
   final String username;
   final String email;
   final String password;
 
-  AuthUserData({required this.username, required this.email, required this.password});
+  const AuthUserData({required this.username, required this.email, required this.password});
+
+  @override
+  List<Object?> get props => [username, email, password];
+
+  @override
+  bool get stringify => true;
 }
